@@ -1,3 +1,0 @@
-<?php require_once '../../config/conexion.php';
-$fecha=$_POST['fecha']??date('Y-m-d'); $vehiculo=trim($_POST['vehiculo']??''); $responsable=trim($_POST['responsable']??''); $galones=(float)($_POST['galones']??0); $precio=(float)($_POST['precio']??0); $factura=trim($_POST['factura']??''); $obs=trim($_POST['observaciones']??''); $total=$galones*$precio;
-$stmt=$conn->prepare('INSERT INTO combustible_despachos (fecha,vehiculo,responsable,galones,precio,total,factura,observaciones) VALUES (?,?,?,?,?,?,?,?)'); $stmt->bind_param('sssdddss',$fecha,$vehiculo,$responsable,$galones,$precio,$total,$factura,$obs); $stmt->execute(); header('Location: dashboard.php'); exit;
