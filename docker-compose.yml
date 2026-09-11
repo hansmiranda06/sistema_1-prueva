@@ -1,0 +1,57 @@
+services:
+
+  mariadb:
+    image: mariadb:11
+    container_name: planta_agregados_mariadb
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: planta_agregados
+      MYSQL_USER: planta
+      MYSQL_PASSWORD: PlantaDB2026!
+      MYSQL_ROOT_PASSWORD: RootPlanta2026!
+    volumes:
+      - planta_db:/var/lib/mysql
+      - ./database/01_schema.sql:/docker-entrypoint-initdb.d/01_schema.sql:ro
+    networks:
+      - planta_net
+
+  planta_web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: planta_agregados_web
+    restart: unless-stopped
+    ports:
+      - "8090:80"
+    environment:
+      DB_HOST: mariadb
+      DB_NAME: planta_agregados
+      DB_USER: planta
+      DB_PASSWORD: PlantaDB2026!
+    depends_on:
+      - mariadb
+    networks:
+      - planta_net
+
+  phpmyadmin:
+    image: phpmyadmin:5.2
+    container_name: planta_agregados_phpmyadmin
+    restart: unless-stopped
+    ports:
+      - "8091:80"
+    environment:
+      PMA_HOST: mariadb
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: RootPlanta2026! 
+    depends_on:
+      - mariadb
+    networks:
+      - planta_net
+
+networks:
+  planta_net:
+    driver: bridge
+
+volumes:
+  planta_db:
