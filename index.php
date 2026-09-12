@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $sql = "INSERT INTO combustible_compras (fecha, proveedor, galones, factura, observaciones) 
                     VALUES (CURDATE(), '$proveedor', $galones, '$factura', '$obs')";
             if (@mysqli_query($conexion, $sql)) {
-                $mensaje = "<div class='alert success'>✅ Control de Compra Registrado: Factura $factura guardada en inventario. Imprimiendo vale de auditoría...</div>";
+                $mensaje = "<div class='alert success'>✅ Control de Compra Registrado: Factura $factura guardada. Imprimiendo vale...</div>";
                 
                 $ticket_data = [
                     'titulo' => 'VALE DE CONTROL DE COMPRA E INGRESO',
@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     'fecha' => date('d/m/Y H:i:s')
                 ];
             } else {
-                $mensaje = "<div class='alert error'>❌ Error al asentar el control de compra en la base de datos.</div>";
+                $mensaje = "<div class='alert error'>❌ Error al registrar en la base de datos.</div>";
             }
         } else {
             $mensaje = "<div class='alert success'>⛽ [Simulación Local] Generando Comprobante de Control de Compra...</div>";
@@ -80,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $operador_prod = mysqli_real_escape_string($conexion, $_POST['operador_prod']);
             @mysqli_query($conexion, "INSERT INTO produccion (material_id, cantidad, turno, operador) VALUES ($mat_id, $cantidad, 'Turno Central', '$operador_prod')");
         }
-        $mensaje = "<div class='alert success'>🧱 Production Registrada: $cantidad m³ guardados.</div>";
+        $mensaje = "<div class='alert success'>🧱 Producción Registrada: $cantidad m³ guardados.</div>";
     }
 }
 
@@ -193,3 +193,4 @@ $fecha = date('d/m/Y H:i');
     </div>
     
     <div class="text-center" style="margin-top: 25px;">
+        <small>SISTEMA DE CONTROL DE COMPRAS</small><br>
