@@ -1,5 +1,9 @@
 <?php
-// 1. CONFIGURACIÓN Y CONEXIÓN A BASE DE DATOS
+// Habilitar visualización de errores para saber exactamente qué pasa si algo falla
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 $DB_HOST = getenv('DB_HOST') ?: 'mariadb';
 $DB_NAME = getenv('DB_NAME') ?: 'planta_agregados';
 $DB_USER = getenv('DB_USER') ?: 'planta';
@@ -16,7 +20,7 @@ function esc($texto) {
 
 $mensaje_feedback = "";
 
-// 2. PROCESAMIENTO DE ACCIONES EN CAMPO (POST)
+// PROCESAMIENTO DE ACCIONES EN CAMPO (POST)
 if ($conexion && $_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['accion_diesel'])) {
         $maq_id   = intval($_POST['maquinaria_id']);
@@ -71,11 +75,17 @@ if ($conexion && $_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// 3. EXTRACCIÓN DE TELEMETRÍA (DATOS REALES)
-$totalComprasDiesel = 4500; $totalDespachosDiesel = 0; $dieselDisponible = 4500;
-$capacidadMaximaCisterna = 5000; $porcentajeCisterna = 90;
-$ventasHoy = 0.00; $produccionHoy = 0; $despachosHoy = 0;
-$maquinarias = []; $materiales = [];
+// VALORES POR DEFECTO PARA TELEMETRÍA
+$totalComprasDiesel = 4500; 
+$totalDespachosDiesel = 0; 
+$dieselDisponible = 4500;
+$capacidadMaximaCisterna = 5000; 
+$porcentajeCisterna = 90;
+$ventasHoy = 0.00; 
+$produccionHoy = 0; 
+$despachosHoy = 0;
+$maquinarias = []; 
+$materiales = [];
 
 if ($conexion) {
     $testTablas = $conexion->query("SHOW TABLES LIKE 'combustible_compras'");
@@ -158,4 +168,4 @@ $fecha = date('d/m/Y H:i');
         table { width: 100%; border-collapse: collapse; margin-top: 15px; }
         th { color: var(--text-secondary); padding: 12px; font-weight: 600; border-bottom: 1px solid var(--border-color); text-align: left; font-size: 11px; text-transform: uppercase; }
         td { padding: 14px 12px; border-bottom: 1px solid #1e2329; font-size: 14px; }
-        .status-pill { padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: bold; background: rgba(14, 203, 129, 0.15); color: var(--success); }
+
