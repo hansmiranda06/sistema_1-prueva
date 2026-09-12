@@ -1,15 +1,15 @@
 FROM php:8.3-apache
 
-# Instalamos tanto mysqli como pdo_mysql para máxima compatibilidad con bases de datos
+# Instalamos mysqli y pdo_mysql para la conexión a MariaDB
 RUN docker-php-ext-install mysqli pdo_mysql
 
-# Habilitamos el módulo de reescritura de Apache (útil para URLs limpias)
+# Habilitamos mod_rewrite de Apache
 RUN a2enmod rewrite
 
-# Copiamos la aplicación
-COPY app/ /var/www/html/
+# CORREGIDO: Copia el archivo directo desde la raíz del repositorio
+COPY index.php /var/www/html/
 
-# Unificamos la asignación de permisos para optimizar el tamaño de la imagen
+# Configuración de permisos
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html
 
