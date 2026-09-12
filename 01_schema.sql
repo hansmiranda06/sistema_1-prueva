@@ -103,11 +103,6 @@ CREATE TABLE IF NOT EXISTS combustible_despachos (
     FOREIGN KEY (maquinaria_id) REFERENCES maquinaria(id) ON DELETE SET NULL
 );
 
-CREATE OR REPLACE VIEW vista_inventario_diesel AS 
-SELECT 
-    (SELECT COALESCE(SUM(galones), 0) FROM combustible_compras) - 
-    (SELECT COALESCE(SUM(galones), 0) FROM combustible_despachos) AS diesel_disponible_galones;
-
 INSERT INTO usuarios (nombre, usuario, password, rol)
 VALUES ('Administrador', 'admin', '$2y$10$mC28kFpD1L1.kR7Lh18gNuWvF2a8W3MvKbeZt5f3Y9g2f2U.gL50S', 'Administrador')
 ON DUPLICATE KEY UPDATE usuario = usuario;
@@ -119,9 +114,12 @@ VALUES
 ('Polvo de piedra', 'm3', 100.00, 51)
 ON DUPLICATE KEY UPDATE nombre = VALUES(nombre);
 
-INSERT INTO maquinaria (nombre, codigo, marca, modelo, estado)
+INSERT INTO maquinaria (nombre, codigo, marca, modelo, estado, horometro_actual)
 VALUES
-('Cargador frontal', 'MAQ-001', 'XCMG', 'LW500FN', 'Operativa'),
-('Trituradora', 'MAQ-002', 'Planta', 'Trituración', 'Operativa'),
-('Criba vibratoria', 'MAQ-003', 'Planta', '4x8', 'Operativa')
+('Cargador frontal', 'MAQ-001', 'XCMG', 'LW500FN', 'Operativa', 1240.50),
+('Trituradora', 'MAQ-002', 'Planta', 'Trituración', 'Operativa', 3150.20),
+('Criba vibratoria', 'MAQ-003', 'Planta', '4x8', 'Operativa', 850.00)
 ON DUPLICATE KEY UPDATE codigo = VALUES(codigo);
+
+INSERT INTO combustible_compras (fecha, proveedor, galones, precio_galon, total, factura)
+VALUES (CURDATE(), 'Chevron Distribuidora', 4500.00, 28.50, 128250.00, 'FAC-0091');
