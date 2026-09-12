@@ -1,16 +1,22 @@
 <?php
+// 1. CONFIGURACIÓN Y CONEXIÓN A BASE DE DATOS
 $DB_HOST = getenv('DB_HOST') ?: 'mariadb';
 $DB_NAME = getenv('DB_NAME') ?: 'planta_agregados';
 $DB_USER = getenv('DB_USER') ?: 'planta';
 $DB_PASS = getenv('DB_PASSWORD') ?: 'PlantaDB2026!';
 
 $conexion = @new mysqli($DB_HOST, $DB_USER, $DB_PASS, $DB_NAME);
-if ($conexion->connect_errno) { $conexion = null; }
+if ($conexion->connect_errno) { 
+    $conexion = null; 
+}
 
-function esc($texto) { return htmlspecialchars((string)$texto, ENT_QUOTES, 'UTF-8'); }
+function esc($texto) { 
+    return htmlspecialchars((string)$texto, ENT_QUOTES, 'UTF-8'); 
+}
 
 $mensaje_feedback = "";
 
+// 2. PROCESAMIENTO DE ACCIONES EN CAMPO (POST)
 if ($conexion && $_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['accion_diesel'])) {
         $maq_id   = intval($_POST['maquinaria_id']);
@@ -65,6 +71,7 @@ if ($conexion && $_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
+// 3. EXTRACCIÓN DE TELEMETRÍA (DATOS REALES)
 $totalComprasDiesel = 4500; $totalDespachosDiesel = 0; $dieselDisponible = 4500;
 $capacidadMaximaCisterna = 5000; $porcentajeCisterna = 90;
 $ventasHoy = 0.00; $produccionHoy = 0; $despachosHoy = 0;
@@ -152,4 +159,3 @@ $fecha = date('d/m/Y H:i');
         th { color: var(--text-secondary); padding: 12px; font-weight: 600; border-bottom: 1px solid var(--border-color); text-align: left; font-size: 11px; text-transform: uppercase; }
         td { padding: 14px 12px; border-bottom: 1px solid #1e2329; font-size: 14px; }
         .status-pill { padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: bold; background: rgba(14, 203, 129, 0.15); color: var(--success); }
-        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 100; visibility: hidden; opacity: 0; transition: 0.3s; }
