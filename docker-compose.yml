@@ -7,13 +7,13 @@ services:
     container_name: planta_agregados_mariadb
     restart: unless-stopped
     environment:
-      MYSQL_DATABASE: ${DB_NAME:-planta_agregados}
-      MYSQL_USER: ${DB_USER:-planta}
-      MYSQL_PASSWORD: ${DB_PASSWORD:-PlantaDB2026!}
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-RootPlanta2026!}
+      MYSQL_DATABASE: planta_agregados
+      MYSQL_USER: planta
+      MYSQL_PASSWORD: PlantaDB2026!
+      MYSQL_ROOT_PASSWORD: RootPlanta2026!
     volumes:
       - planta_db:/var/lib/mysql
-      # CORREGIDO: Ahora mapea el archivo directo desde la raíz, sin la carpeta /database
+      # CORREGIDO: Mapea el archivo directo desde la raíz, sin la carpeta /database
       - ./01_schema.sql:/docker-entrypoint-initdb.d/01_schema.sql:ro
     networks:
       - planta_net
@@ -33,9 +33,9 @@ services:
       - "8090:80"
     environment:
       DB_HOST: mariadb
-      DB_NAME: ${DB_NAME:-planta_agregados}
-      DB_USER: ${DB_USER:-planta}
-      DB_PASSWORD: ${DB_PASSWORD:-PlantaDB2026!}
+      DB_NAME: planta_agregados
+      DB_USER: planta
+      DB_PASSWORD: PlantaDB2026!
     depends_on:
       mariadb:
         condition: service_healthy
@@ -52,7 +52,7 @@ services:
       PMA_HOST: mariadb
       PMA_PORT: 3306
       PMA_USER: root
-      PMA_PASSWORD: ${DB_ROOT_PASSWORD:-RootPlanta2026!}
+      PMA_PASSWORD: RootPlanta2026!
     depends_on:
       mariadb:
         condition: service_healthy
@@ -65,3 +65,4 @@ networks:
 
 volumes:
   planta_db:
+
