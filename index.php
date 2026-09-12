@@ -11,7 +11,7 @@ $conexion = @mysqli_connect($DB_HOST, $DB_USER, $DB_PASS, $DB_NAME);
 $db_online = ($conexion) ? true : false;
 
 $mensaje = "";
-$ticket_data = null; // Almacena el trigger de control de compra para la ticketera
+$ticket_data = null; 
 
 // PROCESAMIENTO DE FORMULARIOS DIRECTOS
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -32,7 +32,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (@mysqli_query($conexion, $sql)) {
                 $mensaje = "<div class='alert success'>✅ Control de Compra Registrado: Factura $factura guardada en inventario. Imprimiendo vale de auditoría...</div>";
                 
-                // Estructura del Ticket Oficial de Control de Compra
                 $ticket_data = [
                     'titulo' => 'VALE DE CONTROL DE COMPRA E INGRESO',
                     'factura' => $factura,
@@ -46,7 +45,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $mensaje = "<div class='alert error'>❌ Error al asentar el control de compra en la base de datos.</div>";
             }
         } else {
-            // Simulación en Caliente (Modo de prueba local)
             $mensaje = "<div class='alert success'>⛽ [Simulación Local] Generando Comprobante de Control de Compra...</div>";
             $ticket_data = [
                 'titulo' => 'VALE DE CONTROL DE COMPRA (MODO LOCAL)',
@@ -104,8 +102,7 @@ if ($db_online) {
     }
     $disponible = max(($totalIngresado - $totalConsumido), 0);
 } else {
-    // Valores por defecto visuales si no hay conexión activa
-    $totalIngresado = 4500.00; $dieselDisponible = 4500.00; $disponible = 4500.00;
+    $totalIngresado = 4500.00; $disponible = 4500.00;
 }
 
 $fecha = date('d/m/Y H:i');
@@ -132,7 +129,7 @@ $fecha = date('d/m/Y H:i');
         .balance-item p { margin: 5px 0 0; font-size: 22px; font-weight: bold; color: #15191e; }
         .balance-item p.highlight { color: #fcd535; background: #15191e; padding: 2px 8px; border-radius: 4px; display: inline-block; }
 
-        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
         .card { background: #fff; border: 1px solid #e1e4e8; border-radius: 8px; padding: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
         .card h2 { margin-top: 0; font-size: 14px; border-bottom: 2px solid #f4f6f8; padding-bottom: 10px; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 0.3px; color: #111; }
         .form-group { margin-bottom: 15px; }
@@ -150,7 +147,6 @@ $fecha = date('d/m/Y H:i');
 
         #seccion-ticket-imprimible { display: none; }
 
-        /* AJUSTE DE ESTILOS EXCLUSIVOS PARA LA IMPRESORA TÉRMICA */
         @media print {
             body * { display: none !important; }
             #seccion-ticket-imprimible, #seccion-ticket-imprimible * { display: block !important; }
@@ -164,7 +160,6 @@ $fecha = date('d/m/Y H:i');
 </head>
 <body>
 
-<!-- FORMATO DE TICKET DE CONTROL DE COMPRA (TÉRMICO) -->
 <?php if ($ticket_data): ?>
 <div id="seccion-ticket-imprimible">
     <div class="text-center">
@@ -185,4 +180,16 @@ $fecha = date('d/m/Y H:i');
     <div style="font-size: 14px; font-weight: bold; display: flex; justify-content: space-between;">
         <span>TOTAL COMPRADO:</span>
         <span class="text-right"><?php echo number_format($ticket_data['galones'], 2); ?> GAL</span>
-
+    </div>
+    <div class="ticket-lineas"></div>
+    
+    <div class="espacio-firma">
+        <span>___________________________</span><br>
+        <span>Firma Encargado Planta</span>
+    </div>
+    <div class="espacio-firma">
+        <span>___________________________</span><br>
+        <span>Firma Piloto / Distribuidor</span>
+    </div>
+    
+    <div class="text-center" style="margin-top: 25px;">
