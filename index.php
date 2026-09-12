@@ -80,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $operador_prod = mysqli_real_escape_string($conexion, $_POST['operador_prod']);
             @mysqli_query($conexion, "INSERT INTO produccion (material_id, cantidad, turno, operador) VALUES ($mat_id, $cantidad, 'Turno Central', '$operador_prod')");
         }
-        $mensaje = "<div class='alert success'>🧱 Producción Registrada: $cantidad m³ guardados.</div>";
+        $mensaje = "<div class='alert success'>🧱 Production Registrada: $cantidad m³ guardados.</div>";
     }
 }
 
